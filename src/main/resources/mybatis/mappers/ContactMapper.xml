@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ContactMapper">
+    <!--添加联系人-->
+    <insert id="addContact" parameterType="Contact">
+        insert into contact(user_name, contact_name, alias)
+        values (#{userName}, #{contactName}, #{alias});
+    </insert>
+
+    <!--判断联系人记录是否存在-->
+    <select id="isContactExist" resultType="int">
+        select count(*)
+        from contact
+        where user_name = #{userName}
+          and contact_name = #{contactName}
+    </select>
+
+    <!--删除联系人-->
+    <delete id="removeContact">
+        delete
+        from contact
+        where user_name = #{userName}
+          and contact_name = #{contactName}
+    </delete>
+
+    <!--修改联系人备注-->
+    <update id="editContactAlias">
+        update contact
+        set alias=#{alias}
+        where user_name = #{userName}
+          and contact_name = #{contactName}
+    </update>
+
+    <!--查询联系人列表-->
+    <resultMap id="Contact" type="Contact">
+        <id property="userName" column="userName"/>
+        <result property="contactName" column="contactName"/>
+        <result property="alias" column="alias"/>
+        <result property="photo" column="photo"/>
+    </resultMap>
+
+    <select id="getContactList" resultMap="Contact">
+        select contact.user_name    as userName,
+               contact.contact_name as contactName,
+               contact.alias        as alias,
+               users.photo          as photo
+        from contact
+                 inner join users
+                            on contact.contact_name = users.user_name
+        where contact.user_name = #{userName}
+    </select>
+
+    <!--查询单个联系人-->
+    <select id="getContact" resultMap="Contact">
+        select contact.user_name    as userName,
+               contact.contact_name as contactName,
+               contact.alias        as alias,
+               users.photo          as photo
+        from contact
+                 inner join users
+                            on contact.contact_name = users.user_name
+        where contact.user_name = #{userName}
+          and users.user_name = #{contactName}
+    </select>
+</mapper>

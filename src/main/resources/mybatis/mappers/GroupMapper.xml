@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.GroupMapper">
+    <!--创建群组-->
+    <insert id="createGroup">
+        insert into `groups` (group_name, create_user)
+        values (#{groupName}, #{createUserName})
+    </insert>
+    <!--解散群组-->
+    <delete id="dismissGroup">
+        delete
+        from `groups`
+        where id = #{groupId}
+    </delete>
+    <!--判断指定群组是否存在-->
+    <select id="isGroupExist" resultType="int">
+        select count(*)
+        from `groups`
+        where id = #{groupId}
+    </select>
+    <!--修改群组名称-->
+    <update id="editGroupName">
+        update `groups`
+        set group_name=#{groupName}
+        where id = #{groupId}
+    </update>
+
+</mapper>

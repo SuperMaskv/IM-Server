@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.UserGroupMapper">
+    <!--添加用户到群组-->
+    <insert id="addUser">
+        insert into user_group (user_id, group_id)
+        values (#{userId}, #{groupId})
+    </insert>
+    <!--将用户从群组中移除-->
+    <delete id="removeUser">
+        delete
+        from user_group
+        where user_id = #{userId}
+          and group_id = #{groupId}
+    </delete>
+    <!--查询群组成员-->
+    <select id="queryGroupMember" resultType="String">
+        select user_name
+        from users
+        where user_id in (
+            select user_id
+            from user_group
+            where group_id = #{groupId}
+        )
+    </select>
+</mapper>

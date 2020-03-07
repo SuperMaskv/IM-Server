@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.OfflineMessageMapper">
+    <!--写入私聊离线消息-->
+    <insert id="insertToUserOfflineMessage" parameterType="ToUserOfflineMessage">
+        insert into offline_msg (msg_sender, msg_recipient, msg_content, photo, msg_time)
+        values (#{msgSender}, #{msgRecipient}, #{msgContent}, #{photo}, #{sendTime});
+    </insert>
+    <!--写入群聊离线消息-->
+    <insert id="insertToGroupOfflineMessage" parameterType="ToGroupOfflineMessage">
+        insert into offline_msg (msg_sender, msg_recipient, msg_recipient_group, msg_content)
+        values (#{msgSender}, #{msgRecipient}, #{msgRecipientGroup}, #{msgContent});
+    </insert>
+    <!--从数据库读取离线消息-->
+    <resultMap id="offlineUserMessage" type="ToUserOfflineMessage">
+        <result property="msgSender" column="msg_sender"/>
+        <result property="msgRecipient" column="msg_recipient"/>
+        <result property="msgContent" column="msg_content"/>
+        <result property="photo" column="photo"/>
+        <result property="sendTime" column="msg_time"/>
+    </resultMap>
+    <select id="getOfflineMessage" resultMap="offlineUserMessage">
+        select *
+        from offline_msg
+        where msg_recipient = #{userName}
+    </select>
+    <!--清空指定用户的离线消息-->
+    <delete id="deleteUserOfflineMessage">
+        delete
+        from offline_msg
+        where msg_recipient = #{userName}
+    </delete>
+</mapper>
