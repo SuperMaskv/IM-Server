@@ -8,9 +8,11 @@ import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.Contact;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.AddContactPacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.ContactListPacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.OnlineContactPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ import java.util.ArrayList;
  * <p>
  * 处理添加联系人请求
  */
+@Component
+@ChannelHandler.Sharable
 public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddContactPacket> {
     @Autowired
     private UserMapper userMapper;

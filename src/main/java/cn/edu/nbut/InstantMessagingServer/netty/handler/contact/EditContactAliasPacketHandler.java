@@ -4,14 +4,11 @@ import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
 import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper;
 import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.Contact;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.EditContactAliasPacket;
-
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import org.apache.ibatis.session.SqlSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -21,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * 判断是否有对应联系人信息，存在就修改，不存在就拉倒，并返回执行结果报文
  */
+@Component
+@ChannelHandler.Sharable
 public class EditContactAliasPacketHandler extends SimpleChannelInboundHandler<EditContactAliasPacket> {
 
     @Autowired

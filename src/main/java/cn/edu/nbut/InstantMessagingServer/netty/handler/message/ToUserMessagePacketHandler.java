@@ -5,9 +5,11 @@ import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
 import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.OfflineMessageMapper;
 import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.ToUserOfflineMessage;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.message.ToUserMessagePacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 检查发送方状态
  * 检查接受方在线状态，在线就将报文转发，不在线就存入离线消息数据库
  */
+@Component
+@ChannelHandler.Sharable
 public class ToUserMessagePacketHandler extends SimpleChannelInboundHandler<ToUserMessagePacket> {
     @Autowired
     private OfflineMessageMapper offlineMessageMapper;

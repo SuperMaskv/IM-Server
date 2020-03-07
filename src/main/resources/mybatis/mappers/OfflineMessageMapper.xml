@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.OfflineMessageMapper">
+<mapper namespace="cn.edu.nbut.InstantMessagingServer.mybatis.mapper.OfflineMessageMapper">
     <!--写入私聊离线消息-->
     <insert id="insertToUserOfflineMessage" parameterType="ToUserOfflineMessage">
         insert into offline_msg (msg_sender, msg_recipient, msg_content, photo, msg_time)

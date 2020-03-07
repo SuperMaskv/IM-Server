@@ -7,9 +7,11 @@ import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.UserGroupMapper;
 import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.ToGroupOfflineMessage;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.ResponsePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.message.ToGroupMessagePacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ import java.util.List;
  * <p>
  * 将群聊消息发送给群组内所有用户,不在线的用户将消息写入离线数据库
  */
+@Component
+@ChannelHandler.Sharable
 public class ToGroupMessagePacketHandler extends SimpleChannelInboundHandler<ToGroupMessagePacket> {
     @Autowired
     private UserGroupMapper userGroupMapper;

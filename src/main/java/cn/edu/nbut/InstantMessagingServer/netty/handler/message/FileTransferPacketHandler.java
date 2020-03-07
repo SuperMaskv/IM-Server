@@ -3,8 +3,10 @@ package cn.edu.nbut.InstantMessagingServer.netty.handler.message;
 
 import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.message.FileTransferPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.stereotype.Component;
 
 
 import java.net.InetSocketAddress;
@@ -14,6 +16,8 @@ import java.net.InetSocketAddress;
  * <p>
  * 文件传输沟通报文处理器
  */
+@Component
+@ChannelHandler.Sharable
 public class FileTransferPacketHandler extends SimpleChannelInboundHandler<FileTransferPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext

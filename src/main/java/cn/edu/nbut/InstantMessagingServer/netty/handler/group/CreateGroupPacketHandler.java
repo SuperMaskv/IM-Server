@@ -4,9 +4,11 @@ import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.GroupMapper;
 import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.UserMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.ResponsePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.group.CreateGroupPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author SuperMaskv
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * todo:通知群组内所有用户
  */
+@Component
+@ChannelHandler.Sharable
 public class CreateGroupPacketHandler extends SimpleChannelInboundHandler<CreateGroupPacket> {
 	@Autowired
 	private UserMapper userMapper;

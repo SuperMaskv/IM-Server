@@ -5,9 +5,11 @@ import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
 import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.OfflineContactPacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.user.LogoutPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * 登出报文Handler，将用户从连接池中移除
  */
+@Component
+@ChannelHandler.Sharable
 public class LogoutPacketHandler extends SimpleChannelInboundHandler<LogoutPacket> {
     @Autowired
     private ContactMapper contactMapper;

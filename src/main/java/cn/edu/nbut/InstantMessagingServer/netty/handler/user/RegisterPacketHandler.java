@@ -4,9 +4,11 @@ import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.UserMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.PacketType;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.ResponsePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.user.RegisterPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * 注册请求报文Handler
  */
+@Component
+@ChannelHandler.Sharable
 public class RegisterPacketHandler extends SimpleChannelInboundHandler<RegisterPacket> {
 	@Autowired
 	private UserMapper userMapper;

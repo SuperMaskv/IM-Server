@@ -25,7 +25,10 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class NettyConfigImpl implements NettyConfig {
     private static final Logger LOGGER = LogManager.getLogger(NettyConfigImpl.class);
 
@@ -34,8 +37,38 @@ public class NettyConfigImpl implements NettyConfig {
     private EventLoopGroup childGroup;
     private Class<? extends ServerChannel> channelClass;
 
+    @Autowired
+    private LoginPacketHandler loginPacketHandler;
+    @Autowired
+    private RegisterPacketHandler registerPacketHandler;
+    @Autowired
+    private LogoutPacketHandler logoutPacketHandler;
+    @Autowired
+    private AddContactPacketHandler addContactPacketHandler;
+    @Autowired
+    private RemoveContactPacketHandler removeContactPacketHandler;
+    @Autowired
+    private EditContactAliasPacketHandler editContactAliasPacketHandler;
+    @Autowired
+    private CreateGroupPacketHandler createGroupPacketHandler;
+    @Autowired
+    private DismissGroupPacketHandler dismissGroupPacketHandler;
+    @Autowired
+    private EditGroupNamePacketHandler editGroupNamePacketHandler;
+    @Autowired
+    private AddUserPacketHandler addUserPacketHandler;
+    @Autowired
+    private RemoveUserPacketHandler removeUserPacketHandler;
+    @Autowired
+    private ToUserMessagePacketHandler toUserMessagePacketHandler;
+    @Autowired
+    private ToGroupMessagePacketHandler toGroupMessagePacketHandler;
+    @Autowired
+    private FileTransferPacketHandler fileTransferPacketHandler;
+
     @Override
     public void setChannel(Class<NioServerSocketChannel> nioServerSocketChannelClass) {
+
         this.channelClass = nioServerSocketChannelClass;
     }
 
@@ -83,39 +116,39 @@ public class NettyConfigImpl implements NettyConfig {
 
                             //用户相关操作
                             //登录请求处理
-                            socketChannel.pipeline().addLast("LoginPacketHandler", new LoginPacketHandler());
+                            socketChannel.pipeline().addLast("LoginPacketHandler", loginPacketHandler);
                             //注册请求处理
-                            socketChannel.pipeline().addLast("RegisterPacketHandler", new RegisterPacketHandler());
+                            socketChannel.pipeline().addLast("RegisterPacketHandler", registerPacketHandler);
                             //登出请求处理
-                            socketChannel.pipeline().addLast("LogoutPacketHandler", new LogoutPacketHandler());
+                            socketChannel.pipeline().addLast("LogoutPacketHandler", logoutPacketHandler);
 
                             //联系人相关操作
                             //添加联系人
-                            socketChannel.pipeline().addLast("AddContactPacketHandler", new AddContactPacketHandler());
+                            socketChannel.pipeline().addLast("AddContactPacketHandler", addContactPacketHandler);
                             //删除联系人
-                            socketChannel.pipeline().addLast("RemoveContactPacketHandler", new RemoveContactPacketHandler());
+                            socketChannel.pipeline().addLast("RemoveContactPacketHandler", removeContactPacketHandler);
                             //修改联系人备注
-                            socketChannel.pipeline().addLast("EditContactAliasPacketHandler", new EditContactAliasPacketHandler());
+                            socketChannel.pipeline().addLast("EditContactAliasPacketHandler", editContactAliasPacketHandler);
 
                             //群组相关操作
                             //创建群组
-                            socketChannel.pipeline().addLast("CreateGroupPacketHandler", new CreateGroupPacketHandler());
+                            socketChannel.pipeline().addLast("CreateGroupPacketHandler", createGroupPacketHandler);
                             //解散群组
-                            socketChannel.pipeline().addLast("DismissGroupPacketHandler", new DismissGroupPacketHandler());
+                            socketChannel.pipeline().addLast("DismissGroupPacketHandler", dismissGroupPacketHandler);
                             //给群组改名
-                            socketChannel.pipeline().addLast("EditGroupNamePacketHandler", new EditGroupNamePacketHandler());
+                            socketChannel.pipeline().addLast("EditGroupNamePacketHandler", editGroupNamePacketHandler);
                             //添加用户到群组
-                            socketChannel.pipeline().addLast("AddUserPacketHandler", new AddUserPacketHandler());
+                            socketChannel.pipeline().addLast("AddUserPacketHandler", addUserPacketHandler);
                             //将用户移出群组
-                            socketChannel.pipeline().addLast("RemoveUserPacketHandler", new RemoveUserPacketHandler());
+                            socketChannel.pipeline().addLast("RemoveUserPacketHandler", removeUserPacketHandler);
 
                             //消息相关操作
                             //私聊消息
-                            socketChannel.pipeline().addLast("ToUserMessagePacketHandler", new ToUserMessagePacketHandler());
+                            socketChannel.pipeline().addLast("ToUserMessagePacketHandler", toUserMessagePacketHandler);
                             //群组消息
-                            socketChannel.pipeline().addLast("ToGroupMessagePacketHandler", new ToGroupMessagePacketHandler());
+                            socketChannel.pipeline().addLast("ToGroupMessagePacketHandler", toGroupMessagePacketHandler);
                             //文件传输沟通
-                            socketChannel.pipeline().addLast("FileTransferPacketHandler", new FileTransferPacketHandler());
+                            socketChannel.pipeline().addLast("FileTransferPacketHandler", fileTransferPacketHandler);
 
                             //序列化
                             socketChannel.pipeline().addLast("PacketEncoder", new PacketEncoder());

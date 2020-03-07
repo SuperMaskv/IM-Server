@@ -1,12 +1,9 @@
 package cn.edu.nbut.InstantMessagingServer.mybatis.mapper;
 
 import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 
 public interface UserMapper {
 	//获取所有用户列表

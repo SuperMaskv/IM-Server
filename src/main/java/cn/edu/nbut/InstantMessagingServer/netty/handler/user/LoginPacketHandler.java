@@ -11,9 +11,11 @@ import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.ContactListPac
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.OnlineContactPacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.message.ToUserMessagePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.user.LoginPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,8 @@ import java.util.ArrayList;
  * <p>
  * 收到登录请求报文后，验证身份，下发token
  */
+@Component
+@ChannelHandler.Sharable
 public class LoginPacketHandler extends SimpleChannelInboundHandler<LoginPacket> {
     @Autowired
     private UserMapper userMapper;

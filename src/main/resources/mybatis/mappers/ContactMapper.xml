@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.ContactMapper">
+<mapper namespace="cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper">
     <!--添加联系人-->
     <insert id="addContact" parameterType="Contact">
         insert into contact(user_name, contact_name, alias)

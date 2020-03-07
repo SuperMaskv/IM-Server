@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.UserGroupMapper">
+<mapper namespace="cn.edu.nbut.InstantMessagingServer.mybatis.mapper.UserGroupMapper">
     <!--添加用户到群组-->
     <insert id="addUser">
         insert into user_group (user_id, group_id)

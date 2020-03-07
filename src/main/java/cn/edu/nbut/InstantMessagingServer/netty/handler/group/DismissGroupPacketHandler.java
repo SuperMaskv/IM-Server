@@ -3,9 +3,11 @@ package cn.edu.nbut.InstantMessagingServer.netty.handler.group;
 import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.GroupMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.ResponsePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.group.DismissGroupPacket;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * todo:通知群组内所有用户
  */
+@Component
+@ChannelHandler.Sharable
 public class DismissGroupPacketHandler extends SimpleChannelInboundHandler<DismissGroupPacket> {
 	@Autowired
 	private GroupMapper groupMapper;
