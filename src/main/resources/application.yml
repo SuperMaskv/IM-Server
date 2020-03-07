@@ -1,7 +1,6 @@
 spring:
   datasource:
     druid:
-      type: com.alibaba.druid.pool.DruidDataSource
       url: jdbc:mysql://localhost:3306/im_server_v2?useUnicode=true&useSSL=true&serverTimezone=Asia/Shanghai
       username: root
       password: zhimakaimen
@@ -30,6 +29,8 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
+      stat-view-servlet:
+        enabled: true
 
 mybatis:
   mapper-locations: classpath*:mybatis/mappers/*.xml
