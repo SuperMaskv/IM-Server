@@ -6,6 +6,7 @@ import cn.edu.nbut.InstantMessagingServer.protocol.packet.message.FileTransferPa
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -19,14 +20,16 @@ import java.net.InetSocketAddress;
 @Component
 @ChannelHandler.Sharable
 public class FileTransferPacketHandler extends SimpleChannelInboundHandler<FileTransferPacket> {
+    @Autowired
+    private ConnectionMap connectionMap;
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , FileTransferPacket fileTransferPacket) throws Exception {
-        if (!ConnectionMap.getInstance().isTokenExist(fileTransferPacket.getToken())) return;
-        if (!ConnectionMap.getInstance().isUserExist(fileTransferPacket.getFileReceiver())) return;
-        if (!ConnectionMap.getInstance().isUserExist(fileTransferPacket.getFileSender())) return;
+        if (!connectionMap.isTokenExist(fileTransferPacket.getToken())) return;
+        if (!connectionMap.isUserExist(fileTransferPacket.getFileReceiver())) return;
+        if (!connectionMap.isUserExist(fileTransferPacket.getFileSender())) return;
 
-        var receiverChannel = ConnectionMap.getInstance()
+        var receiverChannel = connectionMap
                 .getChannelByUserName(fileTransferPacket.getFileReceiver());
 
         if (fileTransferPacket.isRequestFlag()) {
@@ -35,7 +38,7 @@ public class FileTransferPacketHandler extends SimpleChannelInboundHandler<FileT
         } else {
             //应答报文：根据agreeFlag来分别处理
 
-            var senderChannel = ConnectionMap.getInstance()
+            var senderChannel = connectionMap
                     .getChannelByUserName(fileTransferPacket.getFileSender());
 
             if (fileTransferPacket.isAgreeFlag()) {

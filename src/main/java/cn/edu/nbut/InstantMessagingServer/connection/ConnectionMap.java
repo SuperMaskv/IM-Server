@@ -3,6 +3,8 @@ package cn.edu.nbut.InstantMessagingServer.connection;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -12,22 +14,19 @@ import java.util.*;
  * <p>
  * 管理已建立的连接
  */
+@Component
+@Scope("singleton")
 public class ConnectionMap {
 	private static final Logger LOGGER = LogManager.getLogger(ConnectionMap.class);
 
-	private ConnectionMap() {
-	}
+//	public static ConnectionMap getInstance() {
+//		return connectionMap;
+//	}
 
-	private static ConnectionMap connectionMap = new ConnectionMap();
-
-	public static ConnectionMap getInstance() {
-		return connectionMap;
-	}
-
-	private static volatile Map<String, Channel> channelMap = new HashMap<>();
-	private static volatile Map<String, Long> tokenMap = new HashMap<>();
-	private static volatile Set<Long> tokenSet = new HashSet<>();
-	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+	private Map<String, Channel> channelMap = new HashMap<>();
+	private Map<String, Long> tokenMap = new HashMap<>();
+	private Set<Long> tokenSet = new HashSet<>();
+	private final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	public synchronized boolean isTokenExist(Long token) {
 		return tokenSet.contains(token);

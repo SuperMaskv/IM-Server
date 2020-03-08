@@ -23,14 +23,17 @@ public class LogoutPacketHandler extends SimpleChannelInboundHandler<LogoutPacke
     @Autowired
     private ContactMapper contactMapper;
 
+    @Autowired
+    private ConnectionMap connectionMap;
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , LogoutPacket logoutPacket) throws Exception {
 
 
-        if (ConnectionMap.getInstance().isTokenExist(logoutPacket.getToken())) {
+        if (connectionMap.isTokenExist(logoutPacket.getToken())) {
 
-            ConnectionMap.getInstance().removeConnection(logoutPacket.getUserName(), logoutPacket.getToken());
+            connectionMap.removeConnection(logoutPacket.getUserName(), logoutPacket.getToken());
 
             //通知用户的联系人用户已下线
             var Contacts = contactMapper.getContactList(logoutPacket.getUserName());
@@ -38,8 +41,8 @@ public class LogoutPacketHandler extends SimpleChannelInboundHandler<LogoutPacke
             offline.setUserName(logoutPacket.getUserName());
             for (var contact :
                     Contacts) {
-                if (ConnectionMap.getInstance().isUserExist(contact.getContactName())) {
-                    ConnectionMap.getInstance()
+                if (connectionMap.isUserExist(contact.getContactName())) {
+                    connectionMap
                             .getChannelByUserName(contact.getContactName())
                             .writeAndFlush(offline);
                 }

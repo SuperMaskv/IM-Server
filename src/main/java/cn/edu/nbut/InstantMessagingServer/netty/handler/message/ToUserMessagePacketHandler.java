@@ -25,13 +25,14 @@ import org.springframework.stereotype.Component;
 public class ToUserMessagePacketHandler extends SimpleChannelInboundHandler<ToUserMessagePacket> {
     @Autowired
     private OfflineMessageMapper offlineMessageMapper;
+    @Autowired
+    private ConnectionMap connectionMap;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , ToUserMessagePacket toUserMessagePacket) throws Exception {
-        if (!ConnectionMap.getInstance().isTokenExist(toUserMessagePacket.getToken())) return;
+        if (!connectionMap.isTokenExist(toUserMessagePacket.getToken())) return;
 
-        ConnectionMap connectionMap = ConnectionMap.getInstance();
 
 
         //判断接收方是否在线

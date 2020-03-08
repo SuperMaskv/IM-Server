@@ -27,12 +27,14 @@ import java.util.List;
 public class ToGroupMessagePacketHandler extends SimpleChannelInboundHandler<ToGroupMessagePacket> {
     @Autowired
     private UserGroupMapper userGroupMapper;
+    @Autowired
     private OfflineMessageMapper offlineMessageMapper;
+    @Autowired
+    private ConnectionMap connectionMap;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , ToGroupMessagePacket toGroupMessagePacket) throws Exception {
-        ConnectionMap connectionMap = ConnectionMap.getInstance();
         ResponsePacket responsePacket = new ResponsePacket();
 
 

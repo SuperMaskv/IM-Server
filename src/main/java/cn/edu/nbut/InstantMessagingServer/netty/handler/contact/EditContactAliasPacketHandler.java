@@ -24,11 +24,13 @@ public class EditContactAliasPacketHandler extends SimpleChannelInboundHandler<E
 
     @Autowired
     private ContactMapper contactMapper;
+    @Autowired
+    private ConnectionMap connectionMap;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , EditContactAliasPacket editContactAliasPacket) throws Exception {
-        if (!ConnectionMap.getInstance().isTokenExist(editContactAliasPacket.getToken())) return;
+        if (!connectionMap.isTokenExist(editContactAliasPacket.getToken())) return;
 
 
         Contact contact = new Contact();

@@ -23,11 +23,13 @@ import org.springframework.stereotype.Component;
 public class RemoveContactPacketHandler extends SimpleChannelInboundHandler<RemoveContactPacket> {
     @Autowired
     private ContactMapper contactMapper;
+    @Autowired
+    private ConnectionMap connectionMap;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , RemoveContactPacket removeContactPacket) throws Exception {
-        if (!ConnectionMap.getInstance().isTokenExist(removeContactPacket.getToken())) return;
+        if (!connectionMap.isTokenExist(removeContactPacket.getToken())) return;
 
 
         if (contactMapper.isContactExist(removeContactPacket.getUserName()
@@ -43,7 +45,7 @@ public class RemoveContactPacketHandler extends SimpleChannelInboundHandler<Remo
             RemoveContactPacket response = new RemoveContactPacket();
             response.setUserName(removeContactPacket.getContactName());
             response.setContactName(removeContactPacket.getUserName());
-            ConnectionMap.getInstance()
+            connectionMap
                     .getChannelByUserName(removeContactPacket.getContactName())
                     .writeAndFlush(response);
         } else {

@@ -28,12 +28,14 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
     private UserMapper userMapper;
     @Autowired
     private ContactMapper contactMapper;
+    @Autowired
+    private ConnectionMap connectionMap;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , AddContactPacket addContactPacket) throws Exception {
         //查询token是否合法
-        if (!ConnectionMap.getInstance().isTokenExist(addContactPacket.getToken())) return;
+        if (!connectionMap.isTokenExist(addContactPacket.getToken())) return;
 
 
         //判断用户和联系人是否存在
@@ -53,7 +55,7 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
                     , addContactPacket.getContactName()));
             channelHandlerContext.channel().writeAndFlush(newContact);
             //将联系人在线状态发送给用户
-            if (ConnectionMap.getInstance().isUserExist(addContactPacket.getContactName())) {
+            if (connectionMap.isUserExist(addContactPacket.getContactName())) {
                 OnlineContactPacket online = new OnlineContactPacket();
                 online.setOnlineContacts(new ArrayList<>());
                 online.getOnlineContacts().add(addContactPacket.getContactName());
@@ -67,12 +69,12 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
             contactMapper.addContact(reverseContact);
 
             //如果联系人也在线，将改动通知给联系人
-            if (ConnectionMap.getInstance().isUserExist(addContactPacket.getContactName())) {
+            if (connectionMap.isUserExist(addContactPacket.getContactName())) {
                 ContactListPacket rNewContact = new ContactListPacket();
                 rNewContact.setContacts(new ArrayList<>());
                 rNewContact.getContacts().add(contactMapper.getContact(addContactPacket.getContactName()
                         , addContactPacket.getUserName()));
-                ConnectionMap.getInstance()
+                connectionMap
                         .getChannelByUserName(addContactPacket.getContactName())
                         .writeAndFlush(rNewContact);
 
@@ -80,7 +82,7 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
                 OnlineContactPacket online = new OnlineContactPacket();
                 online.setOnlineContacts(new ArrayList<>());
                 online.getOnlineContacts().add(addContactPacket.getUserName());
-                ConnectionMap.getInstance()
+                connectionMap
                         .getChannelByUserName(addContactPacket.getContactName())
                         .writeAndFlush(online);
             }
