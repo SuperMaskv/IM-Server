@@ -1,9 +1,9 @@
 package cn.edu.nbut.InstantMessagingServer.netty.handler.user;
 
-import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.UserMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.PacketType;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.ResponsePacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.user.RegisterPacket;
+import cn.edu.nbut.InstantMessagingServer.service.UserService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -19,8 +19,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ChannelHandler.Sharable
 public class RegisterPacketHandler extends SimpleChannelInboundHandler<RegisterPacket> {
-	@Autowired
-	private UserMapper userMapper;
+    private UserService userService;
+
+    @Autowired
+    public RegisterPacketHandler(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
@@ -31,7 +35,7 @@ public class RegisterPacketHandler extends SimpleChannelInboundHandler<RegisterP
 
         try {
 
-            userMapper.registerUser(registerPacket.getUserName(), registerPacket.getUserPwd());
+            userService.registerUser(registerPacket.getUserName(), registerPacket.getUserPwd());
 
             //用户注册成功，构建应答报文
             responsePacket.setStatus(true);

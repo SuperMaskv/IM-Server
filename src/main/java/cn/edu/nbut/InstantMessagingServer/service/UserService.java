@@ -43,4 +43,11 @@ public interface UserService {
      * @param token token
      */
     void removeUserFromConnectionMap(String userName, long token);
+
+    /**
+     * 注册用户
+     * @param userName 用户名
+     * @param userPwd 用户密码
+     */
+    void registerUser(String userName, String userPwd);
 }

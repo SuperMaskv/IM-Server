@@ -19,6 +19,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void registerUser(String userName, String userPwd) {
+        userMapper.registerUser(userName, userPwd);
+    }
+
+    @Override
     public void removeUserFromConnectionMap(String userName, long token) {
         connectionMap.removeConnection(userName, token);
     }
