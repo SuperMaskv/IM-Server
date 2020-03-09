@@ -1,10 +1,10 @@
 package cn.edu.nbut.InstantMessagingServer.netty.handler.user;
 
 
-import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
-import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.OfflineContactPacket;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.user.LogoutPacket;
+import cn.edu.nbut.InstantMessagingServer.service.ContactService;
+import cn.edu.nbut.InstantMessagingServer.service.UserService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -20,32 +20,30 @@ import org.springframework.stereotype.Component;
 @Component
 @ChannelHandler.Sharable
 public class LogoutPacketHandler extends SimpleChannelInboundHandler<LogoutPacket> {
-    @Autowired
-    private ContactMapper contactMapper;
+    private UserService userService;
+    private ContactService contactService;
 
     @Autowired
-    private ConnectionMap connectionMap;
+    public LogoutPacketHandler(UserService userService, ContactService contactService) {
+        this.userService = userService;
+        this.contactService = contactService;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , LogoutPacket logoutPacket) throws Exception {
+        if (userService.validateToken(logoutPacket.getToken())) {
 
-
-        if (connectionMap.isTokenExist(logoutPacket.getToken())) {
-
-            connectionMap.removeConnection(logoutPacket.getUserName(), logoutPacket.getToken());
+            userService.removeUserFromConnectionMap(logoutPacket.getUserName(), logoutPacket.getToken());
 
             //通知用户的联系人用户已下线
-            var Contacts = contactMapper.getContactList(logoutPacket.getUserName());
+            var Contacts = contactService.getContactListByUserName(logoutPacket.getUserName());
+            var OnlineContactChannels = contactService.getLoggedContactChannel(Contacts);
             OfflineContactPacket offline = new OfflineContactPacket();
             offline.setUserName(logoutPacket.getUserName());
-            for (var contact :
-                    Contacts) {
-                if (connectionMap.isUserExist(contact.getContactName())) {
-                    connectionMap
-                            .getChannelByUserName(contact.getContactName())
-                            .writeAndFlush(offline);
-                }
+            for (var channel :
+                    OnlineContactChannels) {
+                channel.writeAndFlush(offline);
             }
         }
     }
