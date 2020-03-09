@@ -23,8 +23,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactListByUserName(String userName) {
-        return contactMapper.getContactList(userName);
+    public Contact getContact(String userName, String contactName) {
+        return contactMapper.getContact(userName, contactName);
+    }
+
+    @Override
+    public Channel getLoggedContactChannel(String userName) {
+        return connectionMap.getChannelByUserName(userName);
     }
 
     @Override
@@ -38,6 +43,16 @@ public class ContactServiceImpl implements ContactService {
             }
         }
         return channelList;
+    }
+
+    @Override
+    public void addContact(Contact contact) {
+        contactMapper.addContact(contact);
+    }
+
+    @Override
+    public List<Contact> getContactListByUserName(String userName) {
+        return contactMapper.getContactList(userName);
     }
 
     @Override

@@ -50,4 +50,13 @@ public interface UserService {
      * @param userPwd 用户密码
      */
     void registerUser(String userName, String userPwd);
+
+    /**
+     * 判断用户在数据库中是否存在
+     * @param userName 用户名
+     * @return 如果存在则返回 true
+     */
+    boolean isUserExist(String userName);
+
+
 }
