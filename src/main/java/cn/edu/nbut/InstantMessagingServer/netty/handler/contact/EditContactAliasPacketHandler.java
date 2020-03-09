@@ -1,9 +1,9 @@
 package cn.edu.nbut.InstantMessagingServer.netty.handler.contact;
 
-import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
-import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper;
 import cn.edu.nbut.InstantMessagingServer.mybatis.pojo.Contact;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.EditContactAliasPacket;
+import cn.edu.nbut.InstantMessagingServer.service.ContactService;
+import cn.edu.nbut.InstantMessagingServer.service.UserService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -22,15 +22,20 @@ import org.springframework.stereotype.Component;
 @ChannelHandler.Sharable
 public class EditContactAliasPacketHandler extends SimpleChannelInboundHandler<EditContactAliasPacket> {
 
+    private UserService userService;
+    private ContactService contactService;
+
     @Autowired
-    private ContactMapper contactMapper;
-    @Autowired
-    private ConnectionMap connectionMap;
+    public EditContactAliasPacketHandler(UserService userService,
+                                         ContactService contactService) {
+        this.userService = userService;
+        this.contactService = contactService;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , EditContactAliasPacket editContactAliasPacket) throws Exception {
-        if (!connectionMap.isTokenExist(editContactAliasPacket.getToken())) return;
+        if (!userService.validateToken(editContactAliasPacket.getToken())) return;
 
 
         Contact contact = new Contact();
@@ -38,8 +43,9 @@ public class EditContactAliasPacketHandler extends SimpleChannelInboundHandler<E
         contact.setContactName(editContactAliasPacket.getContactName());
         contact.setAlias(editContactAliasPacket.getAlias());
 
-        if (contactMapper.isContactExist(editContactAliasPacket.getUserName(), editContactAliasPacket.getContactName()) == 1) {
-            contactMapper.editContactAlias(contact);
+        if (contactService.isContactExist(editContactAliasPacket.getUserName(),
+                editContactAliasPacket.getContactName())) {
+            contactService.editContactAlias(contact);
 
             channelHandlerContext.channel().writeAndFlush(editContactAliasPacket);
         } else {

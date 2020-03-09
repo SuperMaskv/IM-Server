@@ -57,7 +57,7 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
                     , addContactPacket.getContactName()));
             channelHandlerContext.channel().writeAndFlush(newContact);
             //将联系人在线状态发送给用户
-            if (userService.isUserExist(addContactPacket.getContactName())) {
+            if (userService.isUserLogged(addContactPacket.getContactName())) {
                 OnlineContactPacket online = new OnlineContactPacket();
                 online.setOnlineContacts(new ArrayList<>());
                 online.getOnlineContacts().add(addContactPacket.getContactName());
@@ -71,7 +71,7 @@ public class AddContactPacketHandler extends SimpleChannelInboundHandler<AddCont
             contactService.addContact(reverseContact);
 
             //如果联系人也在线，将改动通知给联系人
-            if (userService.isUserExist(addContactPacket.getContactName())) {
+            if (userService.isUserLogged(addContactPacket.getContactName())) {
                 ContactListPacket rNewContact = new ContactListPacket();
                 rNewContact.setContacts(new ArrayList<>());
                 rNewContact.getContacts().add(contactService.getContact(addContactPacket.getContactName()

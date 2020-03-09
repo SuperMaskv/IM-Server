@@ -23,6 +23,16 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public boolean editContactAlias(Contact contact) {
+        return contactMapper.editContactAlias(contact) == 1;
+    }
+
+    @Override
+    public boolean isContactExist(String userName, String contactName) {
+        return contactMapper.isContactExist(userName, contactName) == 1;
+    }
+
+    @Override
     public Contact getContact(String userName, String contactName) {
         return contactMapper.getContact(userName, contactName);
     }

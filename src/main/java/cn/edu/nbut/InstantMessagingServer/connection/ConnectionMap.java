@@ -19,10 +19,6 @@ import java.util.*;
 public class ConnectionMap {
 	private static final Logger LOGGER = LogManager.getLogger(ConnectionMap.class);
 
-//	public static ConnectionMap getInstance() {
-//		return connectionMap;
-//	}
-
 	private Map<String, Channel> channelMap = new HashMap<>();
 	private Map<String, Long> tokenMap = new HashMap<>();
 	private Set<Long> tokenSet = new HashSet<>();
@@ -53,7 +49,6 @@ public class ConnectionMap {
 	}
 
 	public synchronized long removeConnection(String userName,long token) {
-//		long token = tokenMap.get(userName);
 		tokenSet.remove(token);
 		tokenMap.remove(userName);
 		channelMap.remove(userName);
