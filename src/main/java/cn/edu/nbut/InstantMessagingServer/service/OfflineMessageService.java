@@ -12,4 +12,11 @@ public interface OfflineMessageService {
      * @return 离线消息列表
      */
     List<ToUserOfflineMessage> getOfflineMessageByUserName(String userName);
+
+    /**
+     * 将发送给用户的离线消息写入数据库中
+     *
+     * @param toUserOfflineMessage 离线消息对象
+     */
+    void addOfflineMessage(ToUserOfflineMessage toUserOfflineMessage);
 }

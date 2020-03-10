@@ -18,6 +18,11 @@ public class OfflineMessageServiceImpl implements OfflineMessageService {
     }
 
     @Override
+    public void addOfflineMessage(ToUserOfflineMessage toUserOfflineMessage) {
+        offlineMessageMapper.insertToUserOfflineMessage(toUserOfflineMessage);
+    }
+
+    @Override
     public List<ToUserOfflineMessage> getOfflineMessageByUserName(String userName) {
         //获取用户离线消息
         List<ToUserOfflineMessage> offlineMessageList = offlineMessageMapper.getOfflineMessage(userName);
