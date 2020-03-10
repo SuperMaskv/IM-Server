@@ -1,9 +1,9 @@
 package cn.edu.nbut.InstantMessagingServer.netty.handler.contact;
 
 
-import cn.edu.nbut.InstantMessagingServer.connection.ConnectionMap;
-import cn.edu.nbut.InstantMessagingServer.mybatis.mapper.ContactMapper;
 import cn.edu.nbut.InstantMessagingServer.protocol.packet.contact.RemoveContactPacket;
+import cn.edu.nbut.InstantMessagingServer.service.ContactService;
+import cn.edu.nbut.InstantMessagingServer.service.UserService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -21,35 +21,41 @@ import org.springframework.stereotype.Component;
 @Component
 @ChannelHandler.Sharable
 public class RemoveContactPacketHandler extends SimpleChannelInboundHandler<RemoveContactPacket> {
+    private UserService userService;
+    private ContactService contactService;
+
     @Autowired
-    private ContactMapper contactMapper;
-    @Autowired
-    private ConnectionMap connectionMap;
+    public RemoveContactPacketHandler(UserService userService, ContactService contactService) {
+        this.userService = userService;
+        this.contactService = contactService;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext
             , RemoveContactPacket removeContactPacket) throws Exception {
-        if (!connectionMap.isTokenExist(removeContactPacket.getToken())) return;
+        if (!userService.validateToken(removeContactPacket.getToken())) return;
 
 
-        if (contactMapper.isContactExist(removeContactPacket.getUserName()
-                , removeContactPacket.getContactName()) == 1) {
-            contactMapper.removeContact(removeContactPacket.getUserName()
+        if (contactService.isContactExist(removeContactPacket.getUserName()
+                , removeContactPacket.getContactName())) {
+            contactService.removeContact(removeContactPacket.getUserName()
                     , removeContactPacket.getContactName());
-            contactMapper.removeContact(removeContactPacket.getContactName()
+            contactService.removeContact(removeContactPacket.getContactName()
                     , removeContactPacket.getUserName());
 
-
-
             channelHandlerContext.channel().writeAndFlush(removeContactPacket);
+
+
             RemoveContactPacket response = new RemoveContactPacket();
             response.setUserName(removeContactPacket.getContactName());
             response.setContactName(removeContactPacket.getUserName());
-            connectionMap
-                    .getChannelByUserName(removeContactPacket.getContactName())
-                    .writeAndFlush(response);
+            if (userService.isUserLogged(removeContactPacket.getContactName())) {
+                contactService
+                        .getLoggedContactChannel(removeContactPacket.getContactName())
+                        .writeAndFlush(response);
+            }
         } else {
-        	//删除失败
+            //删除失败
         }
     }
 }

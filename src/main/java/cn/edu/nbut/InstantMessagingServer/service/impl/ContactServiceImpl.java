@@ -23,6 +23,11 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public void removeContact(String userName, String contactName) {
+        contactMapper.removeContact(userName, contactName);
+    }
+
+    @Override
     public boolean editContactAlias(Contact contact) {
         return contactMapper.editContactAlias(contact) == 1;
     }
